@@ -1,2 +1,2 @@
 The Android Toolkit is targeted towards developers that need to access and/or manipulate Salesforce data from an Android application. The toolkit is developed on the Android 2.2 Platform (API level 8) and exposes simple interfaces such as 'login', 'create', 'update', 'query' etc for Android developers to communicate with Salesforce.
-See http://wiki.developerforce.com/index.php/Getting_Started_With_The_Android_Toolkit for the most up to date information.
+See http://wiki.developerforce.com/index.php/Getting_Started_with_the_Force.com_Toolkit_for_Android for the most up to date information.
