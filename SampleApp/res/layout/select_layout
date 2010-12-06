@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	android:id="@+id/widget30"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+>
+	<TextView
+		android:id="@+id/widget35"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Select Record Type:"
+		android:textStyle="bold"
+	>
+	</TextView>
+		<Spinner
+		android:id="@+id/recordTypeSpinner"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+	>
+	</Spinner>
+	<Button
+		android:id="@+id/doneButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="  Done  "
+		android:textStyle="bold"
+	>
+	</Button>
+</LinearLayout>

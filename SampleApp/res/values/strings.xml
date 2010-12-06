@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Salesforce Android Toolkit Demo!</string>
+    <string name="app_name">SF7</string>
+    <string name="request">Request!</string>
+    <string-array name="items">
+		<item>Login</item>
+		<item>Query</item>
+		<item>Retrieve</item>
+		<item>Create</item>
+		<item>Update</item>
+		<item>Delete</item>
+		<item>Upsert Account</item>
+		<item>queryMore Example</item>
+		<item>queryAll Example</item>
+		<item>Logout</item>
+	</string-array>
+	<string-array name="recordTypes">
+		<item></item>
+		<item>Account</item>
+		<item>Contact</item>
+	</string-array>
+	<string name="username"></string>
+    <string name="password"></string>
+    <string name="securityToken"></string>
+
+	
+</resources>
