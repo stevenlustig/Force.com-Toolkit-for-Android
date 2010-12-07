@@ -41,15 +41,10 @@ public class SforceLogin extends Activity implements OnClickListener{
 		ConnectorConfig parameters=new ConnectorConfig(username.getText().toString(), password.getText().toString(), securityToken.getText().toString());
 		try {
 	        final LoginResult lr=Salesforce.login(parameters);
-	    	Handler mHandler = new Handler();
-	        mHandler.post(new Runnable() {
-	            public void run() {
-	                Intent intent=new Intent();
-	   		    	intent.setClass(context, com.sforce.android.sample.SforceDisplayLoginResult.class);
-	   		    	intent.putExtra("loginResult", lr.toString());
-	   		    	startActivity(intent);                
-	            }
-	        });
+            Intent intent=new Intent();
+	    	intent.setClass(context, com.sforce.android.sample.SforceDisplayLoginResult.class);
+	    	intent.putExtra("loginResult", lr.toString());
+	    	startActivity(intent);                
 		} catch (Exception e){
 			e.printStackTrace();
 		}
