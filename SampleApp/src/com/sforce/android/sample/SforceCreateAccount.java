@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,8 +27,10 @@ public class SforceCreateAccount extends Activity implements OnClickListener{
     TextView mText;
 	Button createButton;
 	Button doneButton;
+	Button updtButton;
 	Context context;
 	OnClickListener ocl;
+	String accountId;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -43,10 +46,12 @@ public class SforceCreateAccount extends Activity implements OnClickListener{
 		fax = (TextView)this.findViewById(R.id.fax);
 		createButton = (Button)this.findViewById(R.id.createButton);
 		doneButton = (Button)this.findViewById(R.id.doneButton);
+		updtButton = (Button)this.findViewById(R.id.updtButton);
         mText = (TextView) this.findViewById(R.id.txt);
 		createButton.setOnClickListener(this);
 		ocl=new DoneButtonClickListener();
 		doneButton.setOnClickListener(ocl);
+		updtButton.setOnClickListener(new UpdtButtonClickListener());
 		Salesforce.init(context);
 	}
 	
@@ -83,6 +88,21 @@ public class SforceCreateAccount extends Activity implements OnClickListener{
 	        finish();
 		}
 	}
+
+	public class UpdtButtonClickListener implements OnClickListener{
+		public void onClick(View v) {
+	    	Intent intent=new Intent();
+	    	intent.setClass(context, com.sforce.android.sample.SforceUpdateAccount.class);
+	    	intent.putExtra("type", type.getText().toString().trim());
+	    	intent.putExtra("Name", name.getText().toString().trim());
+	    	intent.putExtra("NumberOfEmployees", numberOfEmployees.getText().toString().trim());
+	    	intent.putExtra("Fax", fax.getText().toString().trim());
+	    	intent.putExtra("Id", accountId);
+	    	startActivityForResult(intent, 1);
+	        finish();
+		}
+	}
+	
     public class CreateResponseListener extends BaseResponseListener{
 	    @Override
         public void onComplete(final Object cresults) {
@@ -90,6 +110,7 @@ public class SforceCreateAccount extends Activity implements OnClickListener{
 			StringBuffer collateResults=new StringBuffer();
 			for (SaveResult sr: resultArray){
 				if (sr.isSuccess()){
+					accountId = sr.getId();
 					collateResults=collateResults.append("Record ").append(sr.getId()).append(" created successfully.\n");
 				}else{
 					collateResults=collateResults.append("Record ").append(sr.getId()).append(" creation failed.\n");
