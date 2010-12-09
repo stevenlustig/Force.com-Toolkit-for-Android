@@ -51,7 +51,9 @@ public class LoginSoapRequest implements Request{
 		    serializer.endTag(URN, USERNAME);
 		    serializer.startTag(URN, PASSWORD);
 		    serializer.text(requestFields.get(PASSWORD));
-		    serializer.text(requestFields.get(SECURITY_TOKEN));
+		    String secToken = requestFields.get(SECURITY_TOKEN);
+		    if (secToken != null && !secToken.trim().equals(""))
+		    	serializer.text(requestFields.get(SECURITY_TOKEN));
 		    serializer.endTag(URN, PASSWORD);
 		    serializer.endTag(URN, LOGIN);
 			serializer.endTag(ENV, BODY);
