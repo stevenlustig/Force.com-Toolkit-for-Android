@@ -13,6 +13,7 @@
 		<item>Upsert Account</item>
 		<item>queryMore Example</item>
 		<item>queryAll Example</item>
+		<item>OAuth Login</item>
 		<item>Logout</item>
 	</string-array>
 	<string-array name="recordTypes">
@@ -23,6 +24,7 @@
 	<string name="username"></string>
     <string name="password"></string>
     <string name="securityToken"></string>
-
+	<string name="consumerKey"></string>
+	<string name="callbackUrl"></string>
 	
 </resources>

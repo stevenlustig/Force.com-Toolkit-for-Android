@@ -8,17 +8,19 @@ public final class SforceSoapFaultFactory extends FaultFactory{
 		if (faultType.equals("query")){
 	    	FaultResult fr=fsr.getResult();
 	    	FaultDetail fd=fr.getFaultDetail();
-	    	ExceptionCode exceptionCode=new ExceptionCode(fd.getExceptionCode());
-	    	String exceptionMessage=fd.getExceptionMessage();
+			String excpCode = (fd != null)?fd.getExceptionCode():fr.getFaultCode();
+			String excpMsg = (fd != null)?fd.getExceptionMessage():fr.getFaultString();
+	    	ExceptionCode exceptionCode=new ExceptionCode(excpCode);
 	    	int row=Integer.parseInt(fd.getRow());
 	    	int column=Integer.parseInt(fd.getColumn());
-	    	return new ApiQueryFault(exceptionCode, exceptionMessage, row, column);
+	    	return new ApiQueryFault(exceptionCode, excpMsg, row, column);
 		} else {
 			FaultResult fr=fsr.getResult();
 			FaultDetail fd=fr.getFaultDetail();
-	    	ExceptionCode exceptionCode=new ExceptionCode(fd.getExceptionCode());
-	    	String exceptionMessage=fd.getExceptionMessage();
-	    	return new ApiFault(exceptionCode, exceptionMessage);
+			String excpCode = (fd != null)?fd.getExceptionCode():fr.getFaultCode();
+			String excpMsg = (fd != null)?fd.getExceptionMessage():fr.getFaultString();
+	    	ExceptionCode exceptionCode=new ExceptionCode(excpCode);
+	    	return new ApiFault(exceptionCode, excpMsg);
 		}
 	}
 }

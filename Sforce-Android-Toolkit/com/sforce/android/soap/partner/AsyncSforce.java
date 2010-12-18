@@ -10,6 +10,7 @@ package com.sforce.android.soap.partner;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,8 +20,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.StringEntity;
 
+import android.app.Activity;
 import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.sforce.android.soap.partner.fault.FaultSoapResponse;
 import com.sforce.android.soap.partner.sobject.SObject;
@@ -37,7 +42,11 @@ public class AsyncSforce {
 	private static final String FAULT_STRING="<soapenv:Fault>";
 	private static final String soapAction="\"\"";
 
+	private static final String PROD_OAUTH_URL="https://login.salesforce.com/services/oauth2/authorize?response_type=token&display=touch&client_id=";
+	private static final String SANDBOX_OAUTH_URL="https://test.salesforce.com/services/oauth2/authorize?response_type=token&display=touch&client_id=";
+	
 	private Sforce sf;
+    private RequestListener oAuthLoginListener = null;
 	
     public AsyncSforce(Sforce sf) {
     	this.sf = sf;
@@ -60,6 +69,7 @@ public class AsyncSforce {
             		String SOAPRequestXML=request.getRequest();
             		try{
 	        			HttpPost httppost = new HttpPost(sf.getServerURL());
+	        				
 	        			HttpEntity entity = new StringEntity(SOAPRequestXML);
 	        			httppost.setEntity(entity);
 	        			httppost.setHeader(SOAP_ACTION, soapAction);
@@ -92,6 +102,7 @@ public class AsyncSforce {
         		}catch(IOException ioe){
         			throw new RuntimeException(ioe);
         		} finally{
+        			androidHttpClient1.close();
         			androidHttpClient1.getConnectionManager().shutdown();
         			androidHttpClient1=null;
         		}
@@ -159,6 +170,85 @@ public class AsyncSforce {
             }
         }.start();
     }    
+
+    public void loginOAuth(Activity mActivity, OAuthConnectorConfig parameters, RequestListener listener){
+    	oAuthLoginListener = listener;
+    	
+	  	StringBuffer oauthURL=new StringBuffer();
+		if (parameters.getIsSandbox()){
+			oauthURL.append(SANDBOX_OAUTH_URL).append(parameters.getConsumerKey()).append("&redirect_uri=").append(parameters.getCallbackURL());
+		} else {
+			oauthURL.append(PROD_OAUTH_URL).append(parameters.getConsumerKey()).append("&redirect_uri=").append(parameters.getCallbackURL());
+		}
+
+    	WebView webview = new WebView(mActivity.getApplicationContext());
+    	mActivity.setContentView(webview);
+    	
+        webview.setWebViewClient(new OAuthWebViewClient(parameters.getCallbackURL()));
+        
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.loadUrl(oauthURL.toString());
+        webview.requestFocus(View.FOCUS_DOWN);        
+    }
+
+    private class OAuthWebViewClient extends WebViewClient {
+        
+    	private String callbackURL;
+    	public OAuthWebViewClient(String cURL) {
+    		super();
+    		callbackURL	= cURL;
+    	}
+    	
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            
+            /* Check to make sure that the redirect URI from Salesforce contains the 'special' URI that we passed as the
+             * redirect URI in the initial OAuth request. This confirms that the redirect is indeed from Salesforce.
+             */
+    	if (url.startsWith(callbackURL)) {
+    			String temp = url.substring(callbackURL.length()+1);
+    			String firstParam = temp.split("=")[0];
+    			
+    			if (firstParam.equals("error")){
+    				oAuthLoginListener.onSforceError("oAuthError", new OAuthFaultResponse(temp));
+    			}
+    			else{	
+    				oAuthLoginListener.onComplete(parseToken(temp));
+    			}	
+                return true;
+            } else {
+            	return false;
+            }
+        }
+           
+        /* Per the OAuth 2.0 Use Agent flow supported by Salesforce, the redirect URI will contain the access token (among other
+         * other things) after the '#' sign. This method extracts those values. 
+         */
+
+    	private OAuthLoginResult parseToken(String url) {
+    		String[] keypairs = url.split("&");
+    		OAuthLoginResult oauthResult = new OAuthLoginResult();
+    		for (int i=0;i<keypairs.length;i++) {
+    			String[] onepair = keypairs[i].split("=");
+    			if (onepair[0].equals("access_token")) {
+    				oauthResult.setAccessToken(URLDecoder.decode(onepair[1]));
+    			} else if (onepair[0].equals("refresh_token")) {
+    				oauthResult.setRefreshToken(onepair[1]);
+    			} else if (onepair[0].equals("instance_url")) {
+    				oauthResult.setInstanceUrl(onepair[1]);
+    				oauthResult.setInstanceUrl(oauthResult.getInstanceUrl().replaceAll("%2F", "/"));
+    				oauthResult.setInstanceUrl(oauthResult.getInstanceUrl().replaceAll("%3A", ":"));
+    			} else if (onepair[0].equals("id")) {
+    				oauthResult.setId(onepair[1]);
+    			} else if (onepair[0].equals("issued_at")) {
+    				oauthResult.setIssuedAt(Long.valueOf(onepair[1]));
+    			} else if (onepair[0].equals("signature")) {
+    				oauthResult.setSignature(onepair[1]);
+    			}
+    		}
+    		return oauthResult;
+    	}   	    	
+    }
     /**
      * Interface to be implemented in the Listener class.
      * 

@@ -71,13 +71,6 @@ public class SforceCreateAccount extends Activity implements OnClickListener{
         obj.setFields(requestFields);
         ArrayList<SObject> objs = new ArrayList<SObject>();
         objs.add(obj);
-
-		/*SObject obj2 = new SObject();
-		obj2.setType(type.getText().toString().trim());
-        HashMap<String, String> requestFields2=new HashMap<String, String>();
-        requestFields2.put("name", "Yo 123");
-        obj2.setFields(requestFields2);
-        objs.add(obj2);*/
         
         Salesforce.create(objs , new CreateResponseListener());
 	}

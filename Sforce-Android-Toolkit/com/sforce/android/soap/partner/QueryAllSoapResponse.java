@@ -80,13 +80,14 @@ public class QueryAllSoapResponse implements Response {
 								if (prevType.equals(currentSObject.getType())){
 									String Id=xpp.nextText();
 									currentSObject.setId(Id);
+									currentSObject.setField(ID, Id);
 								}
 							}
 						} else if (!(currentSObject==null)){
 								if (xpp.getPrefix().equals("sf") && (xpp.getAttributeCount()==0)){
 									if ((inRecord) && (prevType.equals(currentSObject.getType()))) {
 										String value=xpp.nextText();
-										(currentSObject.getFields()).put(name, value);
+										currentSObject.setField(name, value);
 									}
 								}
 						} 

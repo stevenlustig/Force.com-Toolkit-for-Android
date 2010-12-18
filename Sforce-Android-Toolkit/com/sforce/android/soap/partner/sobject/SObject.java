@@ -58,11 +58,11 @@ public class SObject {
 	    }
 
 	    public String getField(String fieldName){
-	    	return this.fields.get(fieldName);
+	    	return this.fields.get(fieldName.toLowerCase());
 	    }
 	    
 	    public void setField(String fieldName, String fieldValue){
-	    	this.fields.put(fieldName, fieldValue);
+	    	this.fields.put(fieldName.toLowerCase(), fieldValue);
 	    }
 	    StringBuffer sb=new StringBuffer();
 	    public String toString(){

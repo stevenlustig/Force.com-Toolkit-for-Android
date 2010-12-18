@@ -26,7 +26,8 @@ public class ExceptionCode {
     
     public static ExceptionCode fromValue(String value) throws IllegalArgumentException {
         ExceptionCode enumeration = (ExceptionCode) table.get(value);
-        if (enumeration==null) throw new java.lang.IllegalArgumentException();
+        if (enumeration==null)
+        	enumeration = new ExceptionCode(value);
         return enumeration;
     }
     
@@ -101,6 +102,16 @@ public class ExceptionCode {
     public static final String _UNKNOWN_EXCEPTION = "UNKNOWN_EXCEPTION";
     public static final String _UNSUPPORTED_API_VERSION = "UNSUPPORTED_API_VERSION";
     public static final String _UNSUPPORTED_CLIENT = "UNSUPPORTED_CLIENT";
+    
+    /*OAuth error codes*/
+    public static final String _UNSUPPORTED_RESPONSE_TYPE = "unsupported_response_type";
+    public static final String _INVALID_CLIENT_ID = "invalid_client_id";
+    public static final String _INVALID_REQUEST = "invalid_request";
+    public static final String _ACCESS_DENIED = "access_denied";
+    public static final String _REDIRECT_URI_MISSING = "redirect_uri_missing";
+    public static final String _REDIRECT_URI_MISMATCH = "redirect_uri_mismatch";
+    public static final String _INVALID_GRANT = "invalid_grant";
+    
     public static final ExceptionCode API_CURRENTLY_DISABLED = new ExceptionCode(_API_CURRENTLY_DISABLED);
     public static final ExceptionCode API_DISABLED_FOR_ORG = new ExceptionCode(_API_DISABLED_FOR_ORG);
     public static final ExceptionCode CLIENT_NOT_ACCESSIBLE_FOR_USER = new ExceptionCode(_CLIENT_NOT_ACCESSIBLE_FOR_USER);
@@ -160,4 +171,12 @@ public class ExceptionCode {
     public static final ExceptionCode UNKNOWN_EXCEPTION = new ExceptionCode(_UNKNOWN_EXCEPTION);
     public static final ExceptionCode UNSUPPORTED_API_VERSION = new ExceptionCode(_UNSUPPORTED_API_VERSION);
     public static final ExceptionCode UNSUPPORTED_CLIENT = new ExceptionCode(_UNSUPPORTED_CLIENT);
+
+    public static final ExceptionCode UNSUPPORTED_RESPONSE_TYPE = new ExceptionCode(_UNSUPPORTED_RESPONSE_TYPE);
+    public static final ExceptionCode INVALID_CLIENT_ID = new ExceptionCode(_INVALID_CLIENT_ID);
+    public static final ExceptionCode INVALID_REQUEST = new ExceptionCode(_INVALID_REQUEST);
+    public static final ExceptionCode ACCESS_DENIED = new ExceptionCode(_ACCESS_DENIED);
+    public static final ExceptionCode REDIRECT_URI_MISSING = new ExceptionCode(_REDIRECT_URI_MISSING);
+    public static final ExceptionCode REDIRECT_URI_MISMATCH = new ExceptionCode(_REDIRECT_URI_MISMATCH);
+    public static final ExceptionCode INVALID_GRANT = new ExceptionCode(_INVALID_GRANT);
 }

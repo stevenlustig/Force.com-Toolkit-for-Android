@@ -44,6 +44,8 @@ public class SF8 extends ListActivity {
 		     } else if (id==8){
 		    	 intent.setClass(context, com.sforce.android.sample.SforceQueryAllExample.class);
 		     } else if (id==9){
+		    	 intent.setClass(context, com.sforce.android.sample.SforceOAuthLogin.class);
+		     } else if (id==10){
 		    	 intent.setClass(context, com.sforce.android.sample.SforceLogout.class);
 		     }
 		     startActivity(intent);

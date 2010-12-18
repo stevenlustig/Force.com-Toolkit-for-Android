@@ -11,14 +11,10 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 public class Sforce {
 
@@ -40,17 +36,17 @@ public class Sforce {
 	
 	static final String soapAction="\"\"";
 	LoginResult lr=null;
-
     private String mSessionId = null;
     private String mServerURL = null;
     private long mSessionExpires = 0;
     private String mUserName=null;
     private String mPassword=null;
     private String mSecurityToken=null;
+    private String mAccessToken=null;
     private String mEndPoint=null;
     private String mSoapServer = null;
-    
     Context context;
+
     public Sforce(Context context){
     	this.context=context;
     }
@@ -122,6 +118,7 @@ public class Sforce {
 		return lr;
      }
 
+    
     public static void copy(String in, OutputStream out) 
 	   throws IOException {
 	    synchronized (in) {
@@ -133,6 +130,15 @@ public class Sforce {
 	    }
 	}
 
+public String getAccessToken() {
+    return mAccessToken;
+}
+
+public void setAccessToken(String token) {
+    mAccessToken = token;
+}
+
+    
 public String getSessionId() {
     return mSessionId;
 }

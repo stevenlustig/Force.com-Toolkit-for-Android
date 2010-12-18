@@ -51,11 +51,12 @@ public class RetrieveSoapResponse implements Response {
 							if (!(currentSObject==null)){
 								String Id=xpp.nextText();
 								currentSObject.setId(Id);
+								currentSObject.setField(ID, Id);
 							}
 						} else if (!(currentSObject==null)){
 							if (!(currentSObject.getType()==null)){
 								String value=xpp.nextText();
-								(currentSObject.getFields()).put(name, value);
+								currentSObject.setField(name, value);										
 							}
 						}
 					break;

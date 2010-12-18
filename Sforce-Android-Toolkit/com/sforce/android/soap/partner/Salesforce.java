@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.sforce.android.soap.partner.fault.ApiFault;
+import com.sforce.android.soap.partner.fault.SforceSoapFaultFactory;
 import com.sforce.android.soap.partner.sobject.SObject;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -14,6 +16,7 @@ public class Salesforce {
 	private static Sforce sf;
 	private static AsyncSforce asf;
 	private static Context sContext;
+	private static Integer apiVersion = 20;
 	
 	public static void init(Context context){
 	  sf=new Sforce(context);
@@ -158,7 +161,7 @@ public class Salesforce {
 	asf.request(records, sessionFields, listener);
   }
   
-  public static LoginResult login(ConnectorConfig parameters) throws Exception{
+  public static LoginResult login(ConnectorConfig parameters){
 	  StringBuffer endPoint=new StringBuffer();
 	  if (parameters.getIsSandbox()){
 		  endPoint.append("https://test.salesforce.com/services/Soap/u/").append(parameters.getApiVersion()).append(".0");
@@ -175,12 +178,19 @@ public class Salesforce {
 	  requestFields.put("responseType", "login");
 	  LoginResult lr=sf.login(requestFields, sContext);
       sf.setSessionId(lr.getSessionId());
-	  sf.setSessionExpiresIn("7200");
+	  //sf.setSessionExpiresIn("7200");
 	  sf.setServerURL(lr.getServerURL());
 	  SessionStore.save(sf, sContext);
 	  return lr;
   }
 
+  public static void loginOAuth(Activity activity, OAuthConnectorConfig parameters, ResponseListener oAuthLoginListener){
+	  BaseRequestListener listener=new OAuthLoginRequestListener();
+	  listener.setResponseListener(oAuthLoginListener);
+	  apiVersion = parameters.getApiVersion();
+	  asf.loginOAuth(activity, parameters, listener);
+  }
+  
   public static void logout(ResponseListener logoutResponseListener)
   {
 	HashMap<String, String> requestFields=new HashMap<String, String>();
@@ -289,6 +299,22 @@ public class Salesforce {
       }
   }    
 
+  public static class OAuthLoginRequestListener extends BaseRequestListener{
+
+      public void onComplete(final Object uresponse) {
+    	  	OAuthLoginResult loginResponse=(OAuthLoginResult) uresponse;
+		    sf.setSessionId(loginResponse.getAccessToken());
+			sf.setServerURL(loginResponse.getInstanceUrl()+"/services/Soap/u/"+apiVersion+".0/");
+			SessionStore.save(sf, sContext);
+			getResponseListener().onComplete(loginResponse);
+      }
+
+  	public void onSforceError(String faultType, Response response) {
+  		OAuthFaultResponse error = (OAuthFaultResponse)response;
+        getResponseListener().onSforceError(error.getApiFault());
+  	}       
+  }
+ 
   public static interface ResponseListener {
       public void onComplete(Object response);
       public void onException(Exception e);
