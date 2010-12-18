@@ -43,6 +43,8 @@
         </activity>
         <activity android:name="com.sforce.android.sample.SforceThanks">
         </activity>
+        <activity android:name="com.sforce.android.sample.SforceOAuthLogin">
+        </activity>
     </application>
 
 	<uses-permission android:name="android.permission.INTERNET" />
