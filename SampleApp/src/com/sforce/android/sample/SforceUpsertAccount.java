@@ -24,6 +24,7 @@ public class SforceUpsertAccount extends Activity implements OnClickListener{
 	TextView numberOfEmployees;
 	TextView fax;
 	TextView externalId;
+	TextView externalIdField;
     TextView mText;
 	Button upsertButton;
 	Button doneButton;
@@ -39,6 +40,7 @@ public class SforceUpsertAccount extends Activity implements OnClickListener{
 		sObjectType = (TextView)this.findViewById(R.id.sObjectType);
 		type= (TextView)this.findViewById(R.id.type);
 		type.setText("Account");
+		externalIdField = (TextView)this.findViewById(R.id.externalIdFieldName);
 		externalId = (TextView)this.findViewById(R.id.externalId);
 		name = (TextView)this.findViewById(R.id.name);
 		numberOfEmployees = (TextView)this.findViewById(R.id.numberOfEmployees);
@@ -59,7 +61,7 @@ public class SforceUpsertAccount extends Activity implements OnClickListener{
         requestFields.put("name", name.getText().toString());
         requestFields.put("numberOfEmployees", numberOfEmployees.getText().toString());
         requestFields.put("fax", fax.getText().toString());
-        requestFields.put("FDIC_No__c", externalId.getText().toString());
+        requestFields.put(externalIdField.getText().toString(), externalId.getText().toString());
 
         ArrayList<String> fields2Null = new ArrayList<String>();
         fields2Null.add("Ownership");
@@ -68,7 +70,7 @@ public class SforceUpsertAccount extends Activity implements OnClickListener{
         obj.setFields(requestFields);
         ArrayList<SObject> objs = new ArrayList<SObject>();
         objs.add(obj);
-        Salesforce.upsert("FDIC_No__c", objs, new UpsertResponseListener());
+        Salesforce.upsert(externalIdField.getText().toString(), objs, new UpsertResponseListener());
 	}
     
 	public class DoneButtonClickListener implements OnClickListener{
