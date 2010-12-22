@@ -10,9 +10,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.sforce.android.soap.partner.BaseResponseListener;
 import com.sforce.android.soap.partner.ConnectorConfig;
 import com.sforce.android.soap.partner.LoginResult;
+import com.sforce.android.soap.partner.OAuthLoginResult;
 import com.sforce.android.soap.partner.Salesforce;
+import com.sforce.android.soap.partner.fault.ApiFault;
+import com.sforce.android.soap.partner.fault.ExceptionCode;
 
 public class SforceLogin extends Activity implements OnClickListener{
 	TextView username;
@@ -40,15 +44,39 @@ public class SforceLogin extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		ConnectorConfig parameters=new ConnectorConfig(username.getText().toString(), password.getText().toString(), securityToken.getText().toString());
 		try {
-	        final LoginResult lr=Salesforce.login(parameters);
-            Intent intent=new Intent();
-	    	intent.setClass(context, com.sforce.android.sample.SforceDisplayLoginResult.class);
-	    	intent.putExtra("loginResult", lr.toString());
-	    	startActivity(intent);                
+	        Salesforce.login(parameters, new LoginResponseListener());
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
+
+	public class LoginResponseListener extends BaseResponseListener{
+	      @Override
+		  public void onComplete(Object sObjects) {
+	    	  LoginResult result = (LoginResult) sObjects;
+			  String id = result.getUserId();
+			  System.out.println("User id is:"+id);
+			  String orgId = result.getUserInfo().getOrganizationId();
+			  System.out.println("Org id is:"+orgId);
+              Intent intent=new Intent();
+              intent.setClass(context, com.sforce.android.sample.SforceDisplayLoginResult.class);
+	    	  intent.putExtra("loginResult", result.toString());
+	    	  startActivity(intent);                
+	      }
+
+	      @Override
+	      public void onSforceError(ApiFault apiFault){
+		      	String msg = apiFault.getExceptionMessage();
+				System.out.println("Error msg:"+msg);
+		      	String code = apiFault.getExceptionCode().getValue();
+				System.out.println("Error code:"+code);
+		      	if (code.equals(ExceptionCode._INVALID_LOGIN))
+		      	{	
+		      		System.out.println("Invalid login");
+		      	}
+		  }
+	  }
+	
 }
 
 

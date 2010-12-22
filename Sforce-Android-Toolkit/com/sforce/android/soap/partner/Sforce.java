@@ -51,7 +51,7 @@ public class Sforce {
     	this.context=context;
     }
 
-    public LoginResult login(final HashMap<String, String> requestFields, final Context context){
+    /*public LoginResult login(final HashMap<String, String> requestFields, final Context context){
 		String loginString=null;
 		lr=new LoginResult();
 		LoginSoapResponse loginResponse;
@@ -128,7 +128,7 @@ public class Sforce {
 	          out.write(buffer, 0, bytesRead);
 	      }
 	    }
-	}
+	}*/
 
 public String getAccessToken() {
     return mAccessToken;

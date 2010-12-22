@@ -1,20 +1,21 @@
 package com.sforce.android.sample;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.sforce.android.soap.partner.BaseResponseListener;
-import com.sforce.android.soap.partner.Salesforce;
-import com.sforce.android.soap.partner.fault.ApiFault;
-import com.sforce.android.soap.partner.sobject.SObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.sforce.android.soap.partner.BaseResponseListener;
+import com.sforce.android.soap.partner.Salesforce;
+import com.sforce.android.soap.partner.fault.ApiFault;
+import com.sforce.android.soap.partner.sobject.SObject;
 
 public class SforceRetrieve extends Activity implements OnClickListener{
 	TextView fieldList;
@@ -37,10 +38,12 @@ public class SforceRetrieve extends Activity implements OnClickListener{
 		ids = (TextView)this.findViewById(R.id.ids);
 		retrieveButton = (Button)this.findViewById(R.id.retrieveButton);
 		doneButton = (Button)this.findViewById(R.id.doneButton);
+		Button picButton = (Button)this.findViewById(R.id.picButton);
         mText = (TextView) this.findViewById(R.id.txt);
 		retrieveButton.setOnClickListener(this);
 		ocl=new DoneButtonClickListener();
 		doneButton.setOnClickListener(ocl);
+		picButton.setOnClickListener(new PictureButtonClickListener());
 		Salesforce.init(context);
 	}
 	
@@ -49,6 +52,14 @@ public class SforceRetrieve extends Activity implements OnClickListener{
 				ids.getText().toString().split(","), new RetrieveResponseListener());
 	}
     
+	public class PictureButtonClickListener implements OnClickListener{
+		public void onClick(View v) {
+			Intent intent = new Intent();
+	    	intent.setClass(context, com.sforce.android.sample.PicSample.class);
+	    	startActivity(intent);
+		}
+	}
+
 	public class DoneButtonClickListener implements OnClickListener{
 		public void onClick(View v) {
 			setResult(RESULT_OK);
@@ -64,6 +75,9 @@ public class SforceRetrieve extends Activity implements OnClickListener{
 	    		collateRecords.append("No records rerieved. Please specify correct Id value(s).");
 	    	} else {
 		    	for (SObject hm:records){
+			        Editor editor = getApplicationContext().getSharedPreferences("SObject-Id", Context.MODE_PRIVATE).edit();
+			        editor.putString("Id", hm.getField("Id"));
+			        editor.commit();
 		    		collateRecords.append(hm.toString());
 		    	}
 	    	}

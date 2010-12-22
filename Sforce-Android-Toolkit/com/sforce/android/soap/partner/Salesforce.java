@@ -3,14 +3,11 @@ package com.sforce.android.soap.partner;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.sforce.android.soap.partner.fault.ApiFault;
-import com.sforce.android.soap.partner.fault.SforceSoapFaultFactory;
-import com.sforce.android.soap.partner.sobject.SObject;
-
-
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
+
+import com.sforce.android.soap.partner.fault.ApiFault;
+import com.sforce.android.soap.partner.sobject.SObject;
 
 public class Salesforce {
 	private static Sforce sf;
@@ -161,7 +158,7 @@ public class Salesforce {
 	asf.request(records, sessionFields, listener);
   }
   
-  public static LoginResult login(ConnectorConfig parameters){
+  public static void login(ConnectorConfig parameters, ResponseListener loginResponseListener){
 	  StringBuffer endPoint=new StringBuffer();
 	  if (parameters.getIsSandbox()){
 		  endPoint.append("https://test.salesforce.com/services/Soap/u/").append(parameters.getApiVersion()).append(".0");
@@ -176,12 +173,10 @@ public class Salesforce {
 	  requestFields.put("password", parameters.getPassword());
 	  requestFields.put("securityToken", parameters.getSecurityToken());
 	  requestFields.put("responseType", "login");
-	  LoginResult lr=sf.login(requestFields, sContext);
-      sf.setSessionId(lr.getSessionId());
-	  //sf.setSessionExpiresIn("7200");
-	  sf.setServerURL(lr.getServerURL());
-	  SessionStore.save(sf, sContext);
-	  return lr;
+	  
+	  BaseRequestListener listener=new LoginRequestListener();
+	  listener.setResponseListener(loginResponseListener);
+	  asf.request(requestFields, listener);
   }
 
   public static void loginOAuth(Activity activity, OAuthConnectorConfig parameters, ResponseListener oAuthLoginListener){
@@ -298,6 +293,17 @@ public class Salesforce {
     	  getResponseListener().onComplete(response);
       }
   }    
+
+  public static class LoginRequestListener extends BaseRequestListener{
+
+      public void onComplete(final Object uresponse) {
+    	  	LoginResult loginResponse=((LoginSoapResponse) uresponse).getLoginResult();
+		    sf.setSessionId(loginResponse.getSessionId());
+			sf.setServerURL(loginResponse.getServerURL());
+			SessionStore.save(sf, sContext);
+			getResponseListener().onComplete(loginResponse);
+      }
+  }
 
   public static class OAuthLoginRequestListener extends BaseRequestListener{
 
