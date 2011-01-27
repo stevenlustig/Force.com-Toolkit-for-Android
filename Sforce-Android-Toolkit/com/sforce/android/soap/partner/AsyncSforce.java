@@ -84,7 +84,7 @@ public class AsyncSforce {
         			String soapResponseString=null;
     				HttpEntity r_entity = response.getEntity();
     				BufferedHttpEntity b_entity=new BufferedHttpEntity(r_entity);
-    				BufferedReader br = new BufferedReader(new InputStreamReader(b_entity.getContent()));  
+    				BufferedReader br = new BufferedReader(new InputStreamReader(b_entity.getContent(), "UTF8"));  
     				StringBuffer sb = new StringBuffer();  
     				String line;  
     				while ((line = br.readLine()) != null) {  
