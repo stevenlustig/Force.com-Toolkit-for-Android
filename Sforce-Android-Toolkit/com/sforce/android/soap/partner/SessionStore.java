@@ -16,7 +16,7 @@ public class SessionStore {
     private static final String SECURITYTOKEN="securitytoken";
     private static final String ENDPOINT="endpoint";
     private static final String SOAP_SERVER="soapServer";
-    
+        
     public static boolean save(Sforce session, Context context) {
         Editor editor =
             context.getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();

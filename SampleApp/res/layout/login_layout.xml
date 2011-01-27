@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-	android:id="@+id/widget30"
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/widget31"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
 >
-	<LinearLayout
-		android:id="@+id/widget31"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:orientation="vertical"
-		android:layout_alignParentTop="true"
-		android:layout_alignParentLeft="true"
-	>
 		<TextView
-			android:id="@+id/widget32"
+			android:id="@+id/username_label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Username"
@@ -23,13 +16,14 @@
 		</TextView>
 		<EditText
 			android:id="@+id/username"
-			android:layout_width="278px"
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:textSize="18sp"
 		>
 		</EditText>
+
 		<TextView
-			android:id="@+id/widget34"
+			android:id="@+id/password_label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Password"
@@ -38,14 +32,15 @@
 		</TextView>
 		<EditText
 			android:id="@+id/password"
-			android:layout_width="277px"
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:textSize="18sp"
 			android:password="true"
 		>
 		</EditText>
+
 		<TextView
-			android:id="@+id/widget36"
+			android:id="@+id/token_label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Security Token"
@@ -54,18 +49,20 @@
 		</TextView>
 		<EditText
 			android:id="@+id/securityToken"
-			android:layout_width="276px"
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:textSize="18sp"
+			android:password="true"
 		>
 		</EditText>
+
 		<Button
 			android:id="@+id/loginButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Login"
 			android:textStyle="bold"
+			android:onClick="loginOnClick"
 		>
 		</Button>
-	</LinearLayout>
-</RelativeLayout>
+</LinearLayout>

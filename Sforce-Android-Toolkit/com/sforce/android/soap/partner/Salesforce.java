@@ -165,7 +165,7 @@ public class Salesforce {
 	  } else {
 		  endPoint.append("https://login.salesforce.com/services/Soap/u/").append(parameters.getApiVersion()).append(".0");
 	  }
-	  sf.setEndPoint(endPoint.toString());
+	  sf.setServerURL(endPoint.toString());
       HashMap<String, String> requestFields=new HashMap<String, String>();
 	  requestFields.put("requestType", "login");
 	  requestFields.put("endPoint", sf.getEndPoint());

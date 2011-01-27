@@ -8,7 +8,7 @@ import com.sforce.android.soap.partner.sobject.SObject;
 
 public final class SforceSoapRequestFactory extends RequestFactory{
 
-	public static Request getSoapRequest(HashMap<String, String> requestFields){
+	public static Request getSoapRequest(HashMap<String, String> requestFields) {
 		final String requestType=requestFields.get("requestType");
 		if (requestType.equals("login")){
 			return new LoginSoapRequest(requestFields);
@@ -27,7 +27,7 @@ public final class SforceSoapRequestFactory extends RequestFactory{
 		} else return null;
 	}
 
-	public static Request getSoapRequest(ArrayList<SObject> records, HashMap<String, String> sessionFields){
+	public static Request getSoapRequest(ArrayList<SObject> records, HashMap<String, String> sessionFields) {
 		final String requestType=sessionFields.get("requestType");
 		if (requestType.equals("createSObject")){
 			return new CreateSObjectSoapRequest(records, sessionFields);

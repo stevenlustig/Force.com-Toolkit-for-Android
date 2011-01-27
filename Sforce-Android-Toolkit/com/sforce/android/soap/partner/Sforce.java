@@ -1,20 +1,6 @@
 package com.sforce.android.soap.partner;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-
 import android.content.Context;
-import android.os.Bundle;
 
 public class Sforce {
 
@@ -209,11 +195,11 @@ public void setEndPoint(String endPoint){
 	mEndPoint=endPoint;
 }
 
-public void setSoapServer(String mServerURL){
-	if (!(mSoapServer==null)){
-		mSoapServer=(mServerURL.substring(9, mServerURL.indexOf("/services")));
-	} else {
-		mSoapServer=null;
+	public void setSoapServer(String serverUrl) {
+		if (mSoapServer != null) {
+			mSoapServer = (serverUrl.substring(9, serverUrl.indexOf("/services")));
+		} else {
+			mSoapServer = null;
+		}
 	}
-}
 }
