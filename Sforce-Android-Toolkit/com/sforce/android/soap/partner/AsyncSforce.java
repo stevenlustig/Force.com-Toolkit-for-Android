@@ -38,6 +38,8 @@ public class AsyncSforce {
 	private static final String SOAP_RESPONSE = "response";
 	private static final String CONTENT_TYPE = "Content-Type";
 	private static final String RESPONSE_TYPE = "responseType";
+	private static final String USER_AGENT = "User-Agent"; 
+	private static final String USER_AGENT_VALUE = "salesforce-toolkit-android/20";
 
 	private static final String PROD_OAUTH_URL="https://login.salesforce.com/services/oauth2/authorize?response_type=token&display=touch&client_id=";
 	private static final String SANDBOX_OAUTH_URL="https://test.salesforce.com/services/oauth2/authorize?response_type=token&display=touch&client_id=";
@@ -79,6 +81,7 @@ public class AsyncSforce {
         			httppost.setEntity(entity);
         			httppost.setHeader(SOAP_ACTION, SOAP_ACTION_VALUE);
         			httppost.setHeader(CONTENT_TYPE, "text/xml; charset=utf-8");
+        			httppost.setHeader(USER_AGENT, USER_AGENT_VALUE);
         			HttpResponse response = httpClient.execute(httppost);
 
         			String soapResponseString=null;
