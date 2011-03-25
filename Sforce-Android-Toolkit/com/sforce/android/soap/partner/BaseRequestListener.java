@@ -10,7 +10,7 @@ import android.util.Log;
 
 public abstract class BaseRequestListener implements RequestListener {
 	private static final String SFORCE="Sforce";
-	private static ResponseListener listener;
+	private ResponseListener listener;
 	
 	public abstract void onComplete(Object response);
 		
@@ -26,10 +26,10 @@ public abstract class BaseRequestListener implements RequestListener {
 	}
 	
 	public ResponseListener getResponseListener(){
-		return BaseRequestListener.listener;
+		return listener;
 	}
 	
 	public void setResponseListener(ResponseListener listener){
-		BaseRequestListener.listener=listener;
+		this.listener=listener;
 	}
 }

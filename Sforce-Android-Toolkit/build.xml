@@ -1,0 +1,61 @@
+<project name="Sforce-Android-Toolkit" default="jar" basedir=".">
+	<property name="src" location="." />
+	<property name="bin" location="bin" />
+	<property name="dist" location="dist" />
+	<property name="javadoc" location="javadoc" />
+	<property file="local.properties" />	
+
+	<path id="base.path">
+		<pathelement path="$Pclasspath}"/>
+		<fileset dir="${sdk.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${bin}"/>
+		<mkdir dir="${dist}"/>
+	</target>
+	
+	<target name="compile" depends="init" description="Compile source">
+		<javac srcdir="${src}" destdir="${bin}" >
+			<classpath refid="base.path"/> 
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile" description="Build JAR from compiled">
+		<jar jarfile="${dist}/Sforce-Android-Toolkit.jar" basedir="${bin}" />
+	</target>
+
+	<target name="src-jar" depends="compile" description="Build JAR from source. Check if compiles">
+		<jar jarfile="${dist}/Sforce-Android-Toolkit-src.jar" basedir="${src}" />
+	</target>
+
+	<target name="javadoc-jar" depends="javadoc" description="Build Javadoc JAR.">
+		<jar jarfile="${dist}/Sforce-Android-Toolkit-javadoc.jar" basedir="${javadoc}" />
+	</target>
+
+	<target name="clean" description="Clean Up">
+		<delete dir="${bin}"/>
+		<delete dir="${dist}"/>
+	</target>
+
+	<target name="javadoc">
+		<javadoc
+		      access="public"
+			   packagenames="com.sforce.*"
+			   sourcepath="com/**/"
+		       destdir="${javadoc}"
+		       author="true"
+		       version="true"
+		       use="true"
+		       windowtitle="com.sforce">
+		    <fileset dir="${src}" defaultexcludes="yes">
+		        <include name="**/*.java"/>
+		    </fileset>
+		</javadoc>
+	</target>
+
+</project>
+
+

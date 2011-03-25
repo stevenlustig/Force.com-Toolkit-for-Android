@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-public class SObject {
+import java.io.Serializable;
+
+public class SObject implements Serializable {
 		private String type;
 	    private ArrayList<String> fieldsToNull;
 	    private String id;
