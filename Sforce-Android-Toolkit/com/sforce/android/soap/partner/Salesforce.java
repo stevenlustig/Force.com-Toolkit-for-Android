@@ -22,6 +22,13 @@ public class Salesforce {
 	  sContext=context;
   }
   
+  // TODO: There should be some error checking here incase init hasn't been called yet!
+  // TODO: Should the synchronous Sforce have an HTTP timeout too?
+  public static void setTimeout(int timeout)
+  {
+	  asf.setTimeout(timeout);
+  }
+	
   public static void query(String queryString, ResponseListener queryResponseListener)
   {
 	  HashMap<String, String> requestFields=new HashMap<String, String>();

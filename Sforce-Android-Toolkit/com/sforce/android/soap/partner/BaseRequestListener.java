@@ -5,7 +5,6 @@ import com.sforce.android.soap.partner.Salesforce.ResponseListener;
 import com.sforce.android.soap.partner.fault.ApiFault;
 import com.sforce.android.soap.partner.fault.SforceSoapFaultFactory;
 
-import android.os.Bundle;
 import android.util.Log;
 
 public abstract class BaseRequestListener implements RequestListener {
@@ -21,8 +20,7 @@ public abstract class BaseRequestListener implements RequestListener {
 
 	public void onException(Exception e) {
 		Log.e(SFORCE, e.getMessage());
-		Bundle bundle=new Bundle();
-		bundle.putString("exceptionMessage", e.getMessage());
+		listener.onException(e); // Pass the exception on so it can be dealt with properly.
 	}
 	
 	public ResponseListener getResponseListener(){

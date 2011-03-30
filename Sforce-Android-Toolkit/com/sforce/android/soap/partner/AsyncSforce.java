@@ -19,9 +19,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.app.Activity;
-import android.net.http.AndroidHttpClient;
+//import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -32,7 +36,6 @@ import com.sforce.android.soap.partner.sobject.SObject;
 
 
 public class AsyncSforce {
-	private static final String ANDROID = "Android";
 	private static final String SOAP_ACTION = "soapaction";
 	private static final String SOAP_ACTION_VALUE = "\"\"";
 	private static final String SOAP_RESPONSE = "response";
@@ -47,10 +50,20 @@ public class AsyncSforce {
 	private final Sforce sf;
     private RequestListener oAuthLoginListener = null;
 	
+    private int HTTP_TIMEOUT = 5000;
+    
     public AsyncSforce(Sforce sf) {
     	this.sf = sf;
     }
 
+    public void setTimeout(int timeout) {
+    	this.HTTP_TIMEOUT = timeout;
+    }
+    
+    public int getTimeout() {
+    	return this.HTTP_TIMEOUT;
+    }
+    
     /**
      * Gets the request parameters in HashMap. Sends the appropriate SOAP Sforce SOAP request
      * and then returns the appropriate SOAP response. Based on success or failure, it invokes
@@ -70,7 +83,17 @@ public class AsyncSforce {
         new Thread() {
             @Override 
             public void run() {	
-           		AndroidHttpClient httpClient = AndroidHttpClient.newInstance(ANDROID);
+           		
+           		Exception error = null;
+           		
+           		HttpParams params = new BasicHttpParams();
+           		
+           	    //set the timeout parameters
+        		HttpConnectionParams.setConnectionTimeout(params, HTTP_TIMEOUT); //connxn timeout
+        		HttpConnectionParams.setSoTimeout(params, HTTP_TIMEOUT); //socket timeout
+            	
+            	DefaultHttpClient httpClient = new DefaultHttpClient(params);
+           		
            		Response qr = null;
 				Request request = isRecordsRequest ? SforceSoapRequestFactory.getSoapRequest(records, sessionFields)
 						: SforceSoapRequestFactory.getSoapRequest(sessionFields);
@@ -105,14 +128,14 @@ public class AsyncSforce {
         			qr = SforceSoapResponseFactory.getSoapResponse(bundle);
         			
         		} catch(IOException ioe) {
-        			throw new RuntimeException(ioe);
-
+        			error = ioe;
         		} finally {
-        			httpClient.close();
         			httpClient.getConnectionManager().shutdown();
         		}
 
-        		if (qr instanceof FaultSoapResponse) {
+        		if (error != null){
+        			listener.onException(error);
+        		}else if (qr instanceof FaultSoapResponse) {
         			listener.onSforceError(sessionFields.get("responseType"), qr);
         		} else {
         			listener.onComplete(qr);
