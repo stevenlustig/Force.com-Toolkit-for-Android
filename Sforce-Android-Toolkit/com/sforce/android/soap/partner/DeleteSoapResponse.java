@@ -38,7 +38,7 @@ public class DeleteSoapResponse implements Response {
 						break;
 					case XmlPullParser.START_TAG:
 						name = xpp.getName();
-						System.out.println("start tag name="+name);
+						//System.out.println("start tag name="+name);
 						if (name.equalsIgnoreCase(RESULT)){
 							if (currentResult==null){
 								currentResult=new DeleteResult();
@@ -71,7 +71,7 @@ public class DeleteSoapResponse implements Response {
 					break;
 					case XmlPullParser.END_TAG:
 						name = xpp.getName();
-						System.out.println("end tag name="+name);
+						//System.out.println("end tag name="+name);
 						if (name.equalsIgnoreCase(RESULT)){
 							resultArray.add(currentResult);
 							currentResult=null;

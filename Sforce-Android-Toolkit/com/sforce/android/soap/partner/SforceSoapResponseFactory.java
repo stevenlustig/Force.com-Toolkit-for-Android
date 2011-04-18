@@ -1,15 +1,18 @@
 package com.sforce.android.soap.partner;
 
 import com.sforce.android.soap.partner.fault.FaultSoapResponse;
+import static com.sforce.android.soap.partner.SforceConstants.*;
 
 import android.os.Bundle;
 
 public final class SforceSoapResponseFactory extends ResponseFactory{
-
+	private static final String TAG = SforceSoapResponseFactory.class.getName();
+	
 	public static Response getSoapResponse(Bundle bundle){
-		final String responseType=bundle.getString("responseType");
+		
+		final String responseType=bundle.getString(RESPONSE_TYPE);
 		System.out.println("ResponseType="+responseType);
-		final String response=bundle.getString("response");
+		final String response=bundle.getString(SOAP_RESPONSE);
 		System.out.println("response="+response);
 		if (responseType.equals("login")){
 			return new LoginSoapResponse(response);

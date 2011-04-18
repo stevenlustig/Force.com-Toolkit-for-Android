@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.sforce.android.soap.partner.fault.ApiFault;
 import com.sforce.android.soap.partner.sobject.SObject;
@@ -13,7 +14,8 @@ public class Salesforce {
 	private static Sforce sf;
 	private static AsyncSforce asf;
 	private static Context sContext;
-	private static Integer apiVersion = 20;
+	private static Integer apiVersion = 20; 
+	private static final String TAG = Salesforce.class.getName();
 	
 	public static void init(Context context){
 	  sf=new Sforce(context);
@@ -217,6 +219,7 @@ public class Salesforce {
     	    QuerySoapResponse queryresponse=(QuerySoapResponse) qresponse;
 			QueryResult qresult=queryresponse.getResult();
 	    	ArrayList<SObject> records=qresult.getRecords();
+
 	    	getResponseListener().onComplete(records);
       }
   }

@@ -48,7 +48,7 @@ public class QueryMoreSoapResponse implements Response {
 						break;
 					case XmlPullParser.START_TAG:
 						name = xpp.getName();
-						System.out.println("start tag name="+name);
+						//System.out.println("start tag name="+name);
 						if (name.equalsIgnoreCase(DONE)){
 							if (!inRecord){
 								result.setDone(Boolean.parseBoolean(xpp.nextText()));
@@ -94,7 +94,7 @@ public class QueryMoreSoapResponse implements Response {
 					break;
 					case XmlPullParser.END_TAG:
 						name = xpp.getName();
-						System.out.println("end tag name="+name);
+						//System.out.println("end tag name="+name);
 						if (name.equalsIgnoreCase(RECORDS)){
 							if (currentSObject.getType()!=null){
 								result.getRecords().add(currentSObject);

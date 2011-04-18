@@ -25,27 +25,19 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import android.app.Activity;
-//import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.sforce.android.soap.partner.fault.FaultSoapResponse;
 import com.sforce.android.soap.partner.sobject.SObject;
+import static com.sforce.android.soap.partner.SforceConstants.*;
 
 
 public class AsyncSforce {
-	private static final String SOAP_ACTION = "soapaction";
-	private static final String SOAP_ACTION_VALUE = "\"\"";
-	private static final String SOAP_RESPONSE = "response";
-	private static final String CONTENT_TYPE = "Content-Type";
-	private static final String RESPONSE_TYPE = "responseType";
-	private static final String USER_AGENT = "User-Agent"; 
-	private static final String USER_AGENT_VALUE = "salesforce-toolkit-android/20";
-
-	private static final String PROD_OAUTH_URL="https://login.salesforce.com/services/oauth2/authorize?response_type=token&display=touch&client_id=";
-	private static final String SANDBOX_OAUTH_URL="https://test.salesforce.com/services/oauth2/authorize?response_type=token&display=touch&client_id=";
+	private static final String TAG = AsyncSforce.class.getName();
 	
 	private final Sforce sf;
     private RequestListener oAuthLoginListener = null;
@@ -94,7 +86,7 @@ public class AsyncSforce {
             	
             	DefaultHttpClient httpClient = new DefaultHttpClient(params);
            		
-           		Response qr = null;
+           		Response queryResponse = null;
 				Request request = isRecordsRequest ? SforceSoapRequestFactory.getSoapRequest(records, sessionFields)
 						: SforceSoapRequestFactory.getSoapRequest(sessionFields);
            		String SOAPRequestXML=request.getRequest();
@@ -117,7 +109,7 @@ public class AsyncSforce {
     				   sb.append(line).append("\n");  
     				}  
     				soapResponseString = sb.toString(); 
-        		
+    				Log.v(this.getClass().getName(), "Soap Response: " + soapResponseString);
         			Bundle bundle = new Bundle();
         			if (response.getStatusLine().getStatusCode() > 299) {
         				bundle.putString(RESPONSE_TYPE, "fault");
@@ -125,7 +117,7 @@ public class AsyncSforce {
         				bundle.putString(RESPONSE_TYPE, sessionFields.get("responseType"));
         			}
         			bundle.putString(SOAP_RESPONSE, soapResponseString);
-        			qr = SforceSoapResponseFactory.getSoapResponse(bundle);
+        			queryResponse = SforceSoapResponseFactory.getSoapResponse(bundle);
         			
         		} catch(IOException ioe) {
         			error = ioe;
@@ -135,10 +127,10 @@ public class AsyncSforce {
 
         		if (error != null){
         			listener.onException(error);
-        		}else if (qr instanceof FaultSoapResponse) {
-        			listener.onSforceError(sessionFields.get("responseType"), qr);
+        		}else if (queryResponse instanceof FaultSoapResponse) {
+        			listener.onSforceError(sessionFields.get("responseType"), queryResponse);
         		} else {
-        			listener.onComplete(qr);
+        			listener.onComplete(queryResponse);
         		}
             }
         }.start();

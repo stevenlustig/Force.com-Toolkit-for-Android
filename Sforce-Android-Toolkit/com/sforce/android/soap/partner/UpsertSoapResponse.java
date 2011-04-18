@@ -39,7 +39,7 @@ public class UpsertSoapResponse implements Response {
 						break;
 					case XmlPullParser.START_TAG:
 						name = xpp.getName();
-						System.out.println("start tag name="+name);
+						//System.out.println("start tag name="+name);
 						if (name.equalsIgnoreCase(RESULT)){
 							currentResult=new UpsertResult();
 						} else if(name.equalsIgnoreCase(ID)){
@@ -73,7 +73,7 @@ public class UpsertSoapResponse implements Response {
 					break;
 					case XmlPullParser.END_TAG:
 						name = xpp.getName();
-						System.out.println("end tag name="+name);
+						//System.out.println("end tag name="+name);
 						if (name.equalsIgnoreCase(RESULT)){
 							resultArray.add(currentResult);
 							currentResult=null;
