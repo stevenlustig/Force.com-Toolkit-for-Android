@@ -96,6 +96,11 @@ public class SforceQueryMoreExample extends Activity implements OnClickListener{
 	            }
 	        });
 	      }
+	      
+	      @Override
+	      public void onException(Exception e){
+	      }	      
+
 	  }
     public class QueryMoreResponseListener extends BaseResponseListener{
 
@@ -127,6 +132,10 @@ public class SforceQueryMoreExample extends Activity implements OnClickListener{
 	            }
 	        });
 	      }
+
+	      @Override
+	      public void onException(Exception e){
+	      }	      
 
   }
 }

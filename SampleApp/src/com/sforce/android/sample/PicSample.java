@@ -139,5 +139,9 @@ public class PicSample extends Activity {
 	      	sb.append("Exception message:").append(apiFault.getExceptionMessage()).append("\n").append("Exception Code:").append(apiFault.getExceptionCode().toString());
 	      	final String display=sb.toString();
 	      }
+	      
+	      @Override
+	      public void onException(Exception e){
+	      }	      
 	  }
 }

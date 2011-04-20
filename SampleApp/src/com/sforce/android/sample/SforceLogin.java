@@ -76,5 +76,10 @@ public class SforceLogin extends Activity {
 				System.out.println("Invalid login");
 			}
 		}
+		
+	      @Override
+	      public void onException(Exception e){
+	      }	      
+
 	}
 }

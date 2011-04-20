@@ -119,5 +119,10 @@ public class SforceUpdate extends Activity implements OnClickListener{
             }
         });
       }
+      
+      @Override
+      public void onException(Exception e){
+      }	      
+
   }
 }

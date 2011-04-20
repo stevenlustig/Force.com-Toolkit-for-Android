@@ -61,5 +61,10 @@ public class SforceOAuthLogin extends Activity implements OnClickListener{
 		      		System.out.println("User didn't grant access");
 		      	}
 		  }
+	      
+	      @Override
+	      public void onException(Exception e){
+	      }	      
+
 	  }
 }

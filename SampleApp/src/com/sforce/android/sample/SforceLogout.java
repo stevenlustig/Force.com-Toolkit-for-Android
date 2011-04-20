@@ -47,5 +47,10 @@ public class SforceLogout  extends Activity {
                 }
             });
         }
+	      
+	      @Override
+	      public void onException(Exception e){
+	      }	      
+
     }    
 }

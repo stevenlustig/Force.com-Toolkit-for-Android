@@ -128,6 +128,11 @@ public class SforceQueryAllExample extends Activity implements OnClickListener{
 	            }
 	        });
 	      }
+	      
+	      @Override
+	      public void onException(Exception e){
+	      }	      
+
 	  }
     
     public class DeleteResponseListener extends BaseResponseListener{
@@ -165,6 +170,11 @@ public class SforceQueryAllExample extends Activity implements OnClickListener{
 	            }
 	        });
 	      }
+	      
+	      @Override
+	      public void onException(Exception e){
+	      }	      
+
     }
     public class QueryAllResponseListener extends BaseResponseListener{
 
@@ -198,6 +208,10 @@ public class SforceQueryAllExample extends Activity implements OnClickListener{
             }
         });
       }
+
+	      @Override
+	      public void onException(Exception e){
+	      }	      
 
     }
 }

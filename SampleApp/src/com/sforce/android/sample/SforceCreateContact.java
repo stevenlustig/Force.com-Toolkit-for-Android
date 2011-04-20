@@ -111,5 +111,10 @@ public class SforceCreateContact extends Activity implements OnClickListener{
 	            }
 	        });
 	      }
+	      
+	      @Override
+	      public void onException(Exception e){
+	      }	      
+
 	  }
 }
