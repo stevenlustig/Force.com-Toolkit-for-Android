@@ -62,7 +62,7 @@ public class SforceUpdate extends Activity implements OnClickListener{
 	    	int index=1;
 	    	String recordType=null;
 	    	String id=null;
-	    	HashMap<String, String> fields=null;
+	    	SObject obj = null;
 	    	//There is only one record getting updated in the current application 
 	    	//otherwise the following update activity would be inside the loop.
 	    	
@@ -78,7 +78,7 @@ public class SforceUpdate extends Activity implements OnClickListener{
 		    	{
 		        	recordType=hm.getType();
 		        	id=hm.getId();
-		        	fields=hm.getFields();
+		        	obj = hm;
 		    		index++;
 		    	}
 		    	
@@ -91,16 +91,16 @@ public class SforceUpdate extends Activity implements OnClickListener{
 			    	intent.setClass(context, com.sforce.android.sample.SforceUpdateContact.class);
 			    	requestCode=0;
 			    	intent.putExtra("type", recordType);
-			    	intent.putExtra("FirstName", fields.get("FirstName"));
-			    	intent.putExtra("LastName", fields.get("LastName"));
+			    	intent.putExtra("FirstName", obj.getField("FirstName"));
+			    	intent.putExtra("LastName", obj.getField("LastName"));
 			    	intent.putExtra("Id", id);
 			    	startActivityForResult(intent, requestCode);
 		    	} else if (recordType.equals("Account")){ 
 			    	intent.setClass(context, com.sforce.android.sample.SforceUpdateAccount.class);
 			    	intent.putExtra("type", recordType);
-			    	intent.putExtra("Name", fields.get("Name"));
-			    	intent.putExtra("NumberOfEmployees", fields.get("NumberOfEmployees"));
-			    	intent.putExtra("Fax", fields.get("Fax"));
+			    	intent.putExtra("Name", obj.getField("Name"));
+			    	intent.putExtra("NumberOfEmployees", obj.getField("NumberOfEmployees"));
+			    	intent.putExtra("Fax", obj.getField("Fax"));
 			    	intent.putExtra("Id", id);
 			    	requestCode=1;
 			    	startActivityForResult(intent, requestCode);

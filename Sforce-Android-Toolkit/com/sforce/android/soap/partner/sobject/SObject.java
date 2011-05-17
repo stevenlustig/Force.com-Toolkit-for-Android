@@ -10,16 +10,14 @@ import java.io.Serializable;
 public class SObject implements Serializable {
 		private String type;
 	    private ArrayList<String> fieldsToNull;
-	    private String id;
 	    private HashMap<String, String> fields=new HashMap<String, String>();
 	    public SObject() {
 	    	super();
 	    }
 
-	    public SObject(String type, ArrayList<String> fieldsToNull, String id, HashMap<String, String> fields) {
+	    public SObject(String type, ArrayList<String> fieldsToNull, HashMap<String, String> fields) {
 	           this.type = type;
 	           this.fieldsToNull = fieldsToNull;
-	           this.id = id;
 	           this.fields=fields;
 	    }
 	    public java.lang.String getType() {
@@ -44,11 +42,18 @@ public class SObject implements Serializable {
 	    }
 
 	    public java.lang.String getId() {
-	        return id;
+	    	String i = this.fields.get("id");
+	    	if (i == null)
+	    	{	
+		    	i = this.fields.get("Id");
+		    	if (i == null)
+		    		i = this.fields.get("ID");
+	    	}
+	        return i;
 	    }
 
 	    public void setId(java.lang.String id) {
-	        this.id = id;
+	    	setField("id", id);
 	    }
 	    
 	    public HashMap<String, String> getFields(){
@@ -69,7 +74,7 @@ public class SObject implements Serializable {
 	    StringBuffer sb=new StringBuffer();
 	    public String toString(){
 	    	sb.append("****************************\n");
-	    	sb.append("Type:").append(type).append("\n").append("Id:").append(id).append("\n");
+	    	sb.append("Type:").append(type).append("\n").append("Id:").append(getId()).append("\n");
 
 	    	Set<String> fieldSet=fields.keySet();
 			Iterator<String> itrFields=fieldSet.iterator();

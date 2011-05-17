@@ -67,9 +67,9 @@ public class SforceUpdateAccount extends Activity implements OnClickListener{
         requestFields.put("name", name.getText().toString());
         requestFields.put("numberOfEmployees", numberOfEmployees.getText().toString());
         requestFields.put("fax", fax.getText().toString());
-        requestFields.put("Id", id);
 
         obj.setFields(requestFields);
+        obj.setId(id);
         ArrayList<String> fields2Null = new ArrayList<String>();
         fields2Null.add("Ownership");
         obj.setFieldsToNull(fields2Null);
