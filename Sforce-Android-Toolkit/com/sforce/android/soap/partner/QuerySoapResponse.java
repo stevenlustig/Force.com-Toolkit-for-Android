@@ -101,7 +101,7 @@ public class QuerySoapResponse implements Response {
 							if (inRecord){
 								if (prevType.equals(currentSObject.getType())){
 									String Id=xpp.nextText();
-									if (Id != null && Id != "null" && Id != "")
+									if (Id != null && !Id.equalsIgnoreCase("null") && !Id.equals(""))
 									{
 										currentSObject.setField(getRelationshipPrefix(parentChildrelationships)+ID, Id);										
 									}
