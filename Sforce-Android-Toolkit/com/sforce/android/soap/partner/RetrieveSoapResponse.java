@@ -3,6 +3,8 @@ package com.sforce.android.soap.partner;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Stack;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -17,6 +19,7 @@ public class RetrieveSoapResponse implements Response {
 	static final String TYPE="type";
 	static final String ID="Id";
 	static final String RESULT="result";
+	private Stack parentChildrelationships = new Stack();
 	
 	public RetrieveSoapResponse() {
 	}
@@ -50,13 +53,24 @@ public class RetrieveSoapResponse implements Response {
 						} else if(name.equalsIgnoreCase(ID)){
 							if (!(currentSObject==null)){
 								String Id=xpp.nextText();
-								currentSObject.setId(Id);
-								currentSObject.setField(ID, Id);
+								if (Id != null && Id != "null" && Id != "")
+								{
+									currentSObject.setField(QuerySoapResponse.getRelationshipPrefix(parentChildrelationships)+ID, Id);										
+								}
 							}
 						} else if (!(currentSObject==null)){
 							if (!(currentSObject.getType()==null)){
-								String value=xpp.nextText();
-								currentSObject.setField(name, value);										
+								if (xpp.getAttributeCount()==0)
+								{	
+									String value=xpp.nextText();
+									currentSObject.setField(QuerySoapResponse.getRelationshipPrefix(parentChildrelationships)+name , value);										
+								}
+								else 
+								{
+									if (xpp.getAttributeValue(null, "type") != null &&
+										xpp.getAttributeValue(null, "type").contains("sObject")	)
+										parentChildrelationships.push(xpp.getName());											
+								}
 							}
 						}
 					break;
@@ -69,6 +83,12 @@ public class RetrieveSoapResponse implements Response {
 							}
 						} else if (name.equalsIgnoreCase(RETRIEVE_RESPONSE)){
 							done = true;
+						}
+						else if (!parentChildrelationships.isEmpty()) 
+						{
+							String lastRel = (String)parentChildrelationships.peek();
+							if (name.equalsIgnoreCase(lastRel))
+								parentChildrelationships.pop();
 						}
 						break;
 			}
@@ -92,5 +112,5 @@ public class RetrieveSoapResponse implements Response {
 	
 	public Response getSoapResponse(){
 		return this;
-	}
+	}	
 }

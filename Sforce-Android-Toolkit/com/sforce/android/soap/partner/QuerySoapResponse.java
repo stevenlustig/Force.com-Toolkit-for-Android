@@ -2,6 +2,9 @@ package com.sforce.android.soap.partner;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Enumeration;
+import java.util.Stack;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -14,7 +17,6 @@ public class QuerySoapResponse implements Response {
 	static final String DONE="done";
 	static final String RECORDS="records";
 	static final String SFNAME="Name";
-	static final String SFBILLINGSTREET="BillingStreet";
 	static final String QUERY_RESPONSE="queryResponse";
 	static final String TYPE="type";
 	static final String ID="Id";
@@ -22,6 +24,7 @@ public class QuerySoapResponse implements Response {
 	static final String QUERY_LOCATOR="queryLocator";
 	static final String RESULT="result";
 	static final String FAULTSTRING="faultstring";
+	private Stack parentChildrelationships = new Stack();
 	
 	
 	public QuerySoapResponse() {
@@ -32,6 +35,24 @@ public class QuerySoapResponse implements Response {
 	}
 	
 	public QuerySoapResponse(String response1) {
+			this.result = parseQueryResponse(response1, QUERY_RESPONSE);
+	}
+
+	public QueryResult getResult() {
+	    return result;
+	}
+	
+	public void setResult(QueryResult result) {
+	    this.result = result;
+	}
+	
+	
+	public Response getSoapResponse(){
+		return this;
+	}
+	
+	public QueryResult parseQueryResponse(String response1, String queryType)
+	{
 		try {
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 			factory.setNamespaceAware(true);
@@ -80,15 +101,26 @@ public class QuerySoapResponse implements Response {
 							if (inRecord){
 								if (prevType.equals(currentSObject.getType())){
 									String Id=xpp.nextText();
-									currentSObject.setId(Id);
-									currentSObject.setField(ID, Id);
+									if (Id != null && Id != "null" && Id != "")
+									{
+										currentSObject.setField(getRelationshipPrefix(parentChildrelationships)+ID, Id);										
+									}
 								}
 							}
 						} else if (!(currentSObject==null)){
-								if (xpp.getPrefix().equals("sf") && (xpp.getAttributeCount()==0)){
-									if ((inRecord) && (prevType.equals(currentSObject.getType()))) {
-										String value=xpp.nextText();
-										currentSObject.setField(name, value);										
+								if (xpp.getPrefix().equals("sf")){
+									if (xpp.getAttributeCount()==0)
+									{	
+										if ((inRecord) && (prevType.equals(currentSObject.getType()))) {
+											String value=xpp.nextText();
+											currentSObject.setField(getRelationshipPrefix(parentChildrelationships)+name , value);										
+										}
+									}
+									else 
+									{
+										if (xpp.getAttributeValue(null, "type") != null &&
+											xpp.getAttributeValue(null, "type").contains("sObject")	)
+											parentChildrelationships.push(xpp.getName());											
 									}
 								}
 						} 
@@ -102,8 +134,14 @@ public class QuerySoapResponse implements Response {
 								inRecord=false;
 							}
 						}
-						else if (name.equalsIgnoreCase(QUERY_RESPONSE)){
+						else if (name.equalsIgnoreCase(queryType)){
 							done = true;
+						}
+						else if (!parentChildrelationships.isEmpty()) 
+						{
+							String lastRel = (String)parentChildrelationships.peek();
+							if (name.equalsIgnoreCase(lastRel))
+								parentChildrelationships.pop();
 						}
 						break;
 			}
@@ -116,18 +154,18 @@ public class QuerySoapResponse implements Response {
 		{
 			throw new RuntimeException(ioe);
 		}
-	}
-
-	public QueryResult getResult() {
-	    return result;
+		return result;
 	}
 	
-	public void setResult(QueryResult result) {
-	    this.result = result;
-	}
-	
-	
-	public Response getSoapResponse(){
-		return this;
+	public static String getRelationshipPrefix(Stack parentChildRels)
+	{
+		if (parentChildRels.isEmpty())
+			return "";
+		
+		String prefix = "";
+		for (Enumeration e = parentChildRels.elements() ; e.hasMoreElements() ;) {
+			prefix += (String)e.nextElement() + ".";
+		}
+		return prefix;
 	}
 }
