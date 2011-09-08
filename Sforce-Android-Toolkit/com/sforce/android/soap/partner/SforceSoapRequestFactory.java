@@ -12,6 +12,8 @@ public final class SforceSoapRequestFactory extends RequestFactory{
 		final String requestType=requestFields.get("requestType");
 		if (requestType.equals("login")){
 			return new LoginSoapRequest(requestFields);
+		} else if (requestType.equals("describeSObject")){
+			return new DescribeSObjectSoapRequest(requestFields);
 		} else if (requestType.equals("query")){
 			return new QuerySoapRequest(requestFields);
 		} else if (requestType.equals("retrieve")){

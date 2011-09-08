@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 
 import com.sforce.android.soap.partner.fault.ApiFault;
 import com.sforce.android.soap.partner.sobject.SObject;
@@ -42,8 +41,21 @@ public class Salesforce {
       listener.setResponseListener(queryResponseListener);
   	  asf.request(requestFields, listener);
   }
+  
+  public static void describeSObject(String sObject, ResponseListener describeSObjectResponseListener)
+  {
+		HashMap<String, String> requestFields = new HashMap<String, String>();
+		requestFields.put("requestType", "describeSObject");
+		requestFields.put("sessionId", sf.getSessionId());
+		requestFields.put("sObjectType", sObject);
+		requestFields.put("responseType", "describeSObject");
+		BaseRequestListener listener = new DescribeSObjectRequestListener();
+		listener.setResponseListener(describeSObjectResponseListener);
+		asf.request(requestFields, listener);
+  }
 
-  public static void query(String queryString, Integer batchSize, ResponseListener queryResponseListener){
+  public static void query(String queryString, Integer batchSize, ResponseListener queryResponseListener)
+  {
 	  HashMap<String, String> requestFields=new HashMap<String, String>();
       requestFields.put("requestType", "query");
       requestFields.put("sessionId", sf.getSessionId());
@@ -212,6 +224,17 @@ public class Salesforce {
 			final ArrayList<SaveResult> resultArray=createresponse.getResult();
 	    	getResponseListener().onComplete(resultArray);
       }        
+  }
+  
+
+  public static class DescribeSObjectRequestListener extends BaseRequestListener {
+	public void onComplete(final Object dresponse) {
+		DescribeSObjectSoapResponse response = (DescribeSObjectSoapResponse) dresponse;
+		DescribeSObjectResult result = response.getResult();
+		ArrayList<SObject> records = result.getRecords();
+
+		getResponseListener().onComplete(records);
+	}
   }
 
   public static class QueryRequestListener extends BaseRequestListener{
