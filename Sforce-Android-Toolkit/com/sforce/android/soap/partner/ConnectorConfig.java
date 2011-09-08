@@ -4,6 +4,7 @@ public class ConnectorConfig {
 
     private String username = null;
     private String password = null;
+    private String client = "";
     private String securitytoken = null;
     private Integer apiVersion = 20;
 	private boolean isSandbox = false;
@@ -26,6 +27,16 @@ public class ConnectorConfig {
 	public void setPassword(String pwd)
 	{
 		this.password = pwd;
+	}
+	
+	public String getClient() 
+	{
+		return this.client;
+	}
+	
+	public void setClient(String client) 
+	{
+		this.client = client;
 	}
 
 	public String getSecurityToken()

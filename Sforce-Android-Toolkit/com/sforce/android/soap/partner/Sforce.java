@@ -6,6 +6,7 @@ public class Sforce {
 
 	static final String SERVERURL = "serverUrl";
 	static final String SESSIONID = "sessionId";
+	static final String CLIENT = "client";
 	static final String LOGINRESPONSE="loginResponse";
 	static final String END_POINT="endPoint";
 	static final String USER_AGENT="User-Agent";
@@ -23,6 +24,7 @@ public class Sforce {
 	static final String soapAction="\"\"";
 	LoginResult lr=null;
     private String mSessionId = null;
+    private String mClient = null;
     private String mServerURL = null;
     private long mSessionExpires = 0;
     private String mUserName=null;
@@ -131,6 +133,14 @@ public String getSessionId() {
 
 public void setSessionId(String token) {
     mSessionId = token;
+}
+
+public String getClient() {
+	return mClient;
+}
+
+public void setClient(String client) {
+	mClient = client;
 }
 
 public String getServerURL() {

@@ -3,6 +3,7 @@ package com.sforce.android.soap.partner;
 public class OAuthConnectorConfig {
 
     private String consumerKey = null;
+    private String client = "";
     private String callbackURL = null;
 	private boolean isSandbox = false;
     private Integer apiVersion = 20;
@@ -15,6 +16,16 @@ public class OAuthConnectorConfig {
 	public void setConsumerKey(String key)
 	{
 		this.consumerKey = key;
+	}
+	
+	public String getClient() 
+	{
+		return this.client;
+	}
+	
+	public void setClient(String client) 
+	{
+		this.client = client;
 	}
 	
 	public String getCallbackURL()

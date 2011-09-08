@@ -23,6 +23,8 @@ public class CreateSObjectSoapRequest implements Request{
 	static final String HEADER="Header";
 	static final String SESSION_HEADER="SessionHeader";
 	static final String SESSION_ID="sessionId";
+	static final String CALLOPTIONS = "CallOptions";
+	static final String CLIENT = "client";
 	static final String BODY="Body";
 	static final String CREATE="create";
 	static final String SOBJECTS_STRING="sObjects";
@@ -64,6 +66,11 @@ public class CreateSObjectSoapRequest implements Request{
 			serializer.text(sessionFields.get(SESSION_ID));
 			serializer.endTag(URN, SESSION_ID);
 			serializer.endTag(ENV, SESSION_HEADER);
+			serializer.startTag(ENV, CALLOPTIONS);
+			serializer.startTag(URN, CLIENT);
+			serializer.text(sessionFields.get(CLIENT));
+			serializer.endTag(URN, CLIENT);
+			serializer.endTag(ENV, CALLOPTIONS);
 			serializer.endTag(ENV, HEADER);
 			serializer.startTag(ENV, BODY);
 			serializer.startTag(URN, CREATE);

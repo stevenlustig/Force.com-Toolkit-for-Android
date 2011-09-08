@@ -9,6 +9,7 @@ import android.content.SharedPreferences.Editor;
 public class SessionStore {
 	private static final String KEY = "sforce-session";
     private static final String SESSIONID = "sessionId";
+    private static final String CLIENT = "client";
     private static final String EXPIRES = "expiresIn";
     private static final String SERVERURL = "serverURL";
     private static final String USERNAME="username";
@@ -28,6 +29,7 @@ public class SessionStore {
         editor.putString(PASSWORD, session.getPassword());
         editor.putString(SECURITYTOKEN, session.getPassword());
         editor.putString(ENDPOINT, session.getEndPoint());
+        editor.putString(CLIENT, session.getClient());
         return editor.commit();
     }
 
@@ -42,6 +44,7 @@ public class SessionStore {
         session.setPassword(savedSession.getString(PASSWORD, null));
         session.setSecurityToken(savedSession.getString(SECURITYTOKEN, null));
         session.setEndPoint(savedSession.getString(ENDPOINT, null));
+        session.setClient(savedSession.getString(CLIENT, ""));
         return session.isSessionIdValid();
     }
 

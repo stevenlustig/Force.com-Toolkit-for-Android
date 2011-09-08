@@ -29,12 +29,26 @@ public class Salesforce {
   {
 	  asf.setTimeout(timeout);
   }
+  
+  public static void describeSObject(String sObject, ResponseListener describeSObjectResponseListener)
+  {
+		HashMap<String, String> requestFields = new HashMap<String, String>();
+		requestFields.put("requestType", "describeSObject");
+		requestFields.put("sessionId", sf.getSessionId());
+		requestFields.put("client", sf.getClient());
+		requestFields.put("sObjectType", sObject);
+		requestFields.put("responseType", "describeSObject");
+		BaseRequestListener listener = new DescribeSObjectRequestListener();
+		listener.setResponseListener(describeSObjectResponseListener);
+		asf.request(requestFields, listener);
+  }
 	
   public static void query(String queryString, ResponseListener queryResponseListener)
   {
 	  HashMap<String, String> requestFields=new HashMap<String, String>();
       requestFields.put("requestType", "query");
       requestFields.put("sessionId", sf.getSessionId());
+	  requestFields.put("client", sf.getClient());
       requestFields.put("queryString", queryString);
       requestFields.put("responseType", "query");
       BaseRequestListener listener=new QueryRequestListener();
@@ -42,23 +56,12 @@ public class Salesforce {
   	  asf.request(requestFields, listener);
   }
   
-  public static void describeSObject(String sObject, ResponseListener describeSObjectResponseListener)
-  {
-		HashMap<String, String> requestFields = new HashMap<String, String>();
-		requestFields.put("requestType", "describeSObject");
-		requestFields.put("sessionId", sf.getSessionId());
-		requestFields.put("sObjectType", sObject);
-		requestFields.put("responseType", "describeSObject");
-		BaseRequestListener listener = new DescribeSObjectRequestListener();
-		listener.setResponseListener(describeSObjectResponseListener);
-		asf.request(requestFields, listener);
-  }
-
   public static void query(String queryString, Integer batchSize, ResponseListener queryResponseListener)
   {
 	  HashMap<String, String> requestFields=new HashMap<String, String>();
       requestFields.put("requestType", "query");
       requestFields.put("sessionId", sf.getSessionId());
+	  requestFields.put("client", sf.getClient());
       requestFields.put("queryString", queryString);
       requestFields.put("batchSize", batchSize.toString());
       requestFields.put("responseType", "query");
@@ -73,6 +76,7 @@ public class Salesforce {
 	requestFields.put("requestType", "queryAll");
 	requestFields.put("queryString", queryString);
 	requestFields.put("sessionId", sf.getSessionId());
+	requestFields.put("client", sf.getClient());
 	requestFields.put("responseType", "queryAll");
     BaseRequestListener listener=new QueryAllRequestListener();
     listener.setResponseListener(queryAllResponseListener);
@@ -85,6 +89,7 @@ public class Salesforce {
     requestFields.put("requestType", "queryMore");
     requestFields.put("queryLocator", queryLocator);
     requestFields.put("sessionId", sf.getSessionId());
+	requestFields.put("client", sf.getClient());
     requestFields.put("responseType", "queryMore");
     BaseRequestListener listener=new QueryMoreRequestListener();
     listener.setResponseListener(queryMoreResponseListener);
@@ -97,6 +102,7 @@ public class Salesforce {
 	    requestFields.put("queryLocator", queryLocator);
 	    requestFields.put("batchSize", batchSize.toString());
 	    requestFields.put("sessionId", sf.getSessionId());
+		requestFields.put("client", sf.getClient());
 	    requestFields.put("responseType", "queryMore");
 	    BaseRequestListener listener=new QueryMoreRequestListener();
 	    listener.setResponseListener(queryMoreResponseListener);
@@ -108,6 +114,7 @@ public class Salesforce {
 	HashMap<String, String> sessionFields = new HashMap<String, String>();
 	sessionFields.put("requestType", "createSObject");
 	sessionFields.put("sessionId", sf.getSessionId());
+	sessionFields.put("client", sf.getClient());
 	sessionFields.put("responseType", "create");
     BaseRequestListener listener=new CreateRequestListener();
     listener.setResponseListener(createResponseListener);
@@ -119,6 +126,7 @@ public class Salesforce {
 	HashMap<String, String> requestFields = new HashMap<String, String>();
 	requestFields.put("requestType", "retrieve");
 	requestFields.put("sessionId", sf.getSessionId());
+	requestFields.put("client", sf.getClient());
 	requestFields.put("responseType", "retrieve");
 	
 	String fields = fieldList[0];
@@ -144,6 +152,7 @@ public class Salesforce {
 	requestFields.put("requestType", "delete");
 	requestFields.put("responseType", "delete");
 	requestFields.put("sessionId", sf.getSessionId());
+	requestFields.put("client", sf.getClient());
 	
 	String ids = deleteIds[0];
 	for (Integer i = 1; i<deleteIds.length; i++)
@@ -161,6 +170,7 @@ public class Salesforce {
 	HashMap<String, String> sessionFields = new HashMap<String, String>();
 	sessionFields.put("requestType", "updateSObject");
 	sessionFields.put("sessionId", sf.getSessionId());
+	sessionFields.put("client", sf.getClient());
 	sessionFields.put("responseType", "update");
     BaseRequestListener listener=new UpdateRequestListener();
     listener.setResponseListener(updateResponseListener);
@@ -172,6 +182,7 @@ public class Salesforce {
 	HashMap<String, String> sessionFields = new HashMap<String, String>();
 	sessionFields.put("requestType", "upsertSObject");
 	sessionFields.put("sessionId", sf.getSessionId());
+	sessionFields.put("client", sf.getClient());
 	sessionFields.put("responseType", "upsert");
 	sessionFields.put("externalIdField", externalIdField);
     BaseRequestListener listener=new UpsertRequestListener();
@@ -186,6 +197,7 @@ public class Salesforce {
 	  } else {
 		  endPoint.append("https://login.salesforce.com/services/Soap/u/").append(parameters.getApiVersion()).append(".0");
 	  }
+	  sf.setClient(parameters.getClient());
 	  sf.setServerURL(endPoint.toString());
       HashMap<String, String> requestFields=new HashMap<String, String>();
 	  requestFields.put("requestType", "login");
@@ -201,6 +213,7 @@ public class Salesforce {
   }
 
   public static void loginOAuth(Activity activity, OAuthConnectorConfig parameters, ResponseListener oAuthLoginListener){
+	  sf.setClient(parameters.getClient());
 	  BaseRequestListener listener=new OAuthLoginRequestListener();
 	  listener.setResponseListener(oAuthLoginListener);
 	  apiVersion = parameters.getApiVersion();
@@ -212,6 +225,7 @@ public class Salesforce {
 	HashMap<String, String> requestFields=new HashMap<String, String>();
     requestFields.put("requestType", "logout");
     requestFields.put("sessionId", sf.getSessionId());
+	requestFields.put("client", sf.getClient());
     requestFields.put("responseType", "logout");
     BaseRequestListener listener=new LogoutRequestListener();
     listener.setResponseListener(logoutResponseListener);

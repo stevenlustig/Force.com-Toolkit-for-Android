@@ -16,6 +16,8 @@ public class DeleteSoapRequest implements Request{
 	static final String HEADER="Header";
 	static final String SESSION_HEADER="SessionHeader";
 	static final String SESSION_ID="sessionId";
+	static final String CALLOPTIONS = "CallOptions";
+	static final String CLIENT = "client";
 	static final String BODY="Body";
 	static final String DELETE="delete";
 	static final String IDS="ids";
@@ -49,6 +51,11 @@ public class DeleteSoapRequest implements Request{
 			serializer.text(requestFields.get(SESSION_ID));
 			serializer.endTag(URN, SESSION_ID);
 			serializer.endTag(ENV, SESSION_HEADER);
+			serializer.startTag(ENV, CALLOPTIONS);
+			serializer.startTag(URN, CLIENT);
+			serializer.text(requestFields.get(CLIENT));
+			serializer.endTag(URN, CLIENT);
+			serializer.endTag(ENV, CALLOPTIONS);
 			serializer.endTag(ENV, HEADER);
 			serializer.startTag(ENV, BODY);
 			serializer.startTag(URN, DELETE);
