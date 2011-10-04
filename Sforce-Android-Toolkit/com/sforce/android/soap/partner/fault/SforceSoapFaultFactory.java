@@ -11,8 +11,14 @@ public final class SforceSoapFaultFactory extends FaultFactory{
 			String excpCode = (fd != null)?fd.getExceptionCode():fr.getFaultCode();
 			String excpMsg = (fd != null)?fd.getExceptionMessage():fr.getFaultString();
 	    	ExceptionCode exceptionCode=new ExceptionCode(excpCode);
-	    	int row=Integer.parseInt(fd.getRow());
-	    	int column=Integer.parseInt(fd.getColumn());
+	    	int row = -1;
+	    	int column = -1;
+	    	if (fd.getRow() != null) {
+	    		row = Integer.parseInt(fd.getRow());
+	    	}
+	    	if (fd.getColumn() != null) {
+	    		column=Integer.parseInt(fd.getColumn());
+	    	}
 	    	return new ApiQueryFault(exceptionCode, excpMsg, row, column);
 		} else {
 			FaultResult fr=fsr.getResult();
